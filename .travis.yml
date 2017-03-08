@@ -12,7 +12,7 @@ before_install:
   - docker run -d -e POSTGRES_PASSWORD=postgres postgres:alpine
 
 env:
-  - TOXENF=py36
+  - TOXENV=py36
   - TOXENV=py35
   - TOXENV=py34
   - TOXENV=py33
@@ -26,6 +26,9 @@ install:
 
 # command to run tests, e.g. python setup.py test
 script: 
-  - py.test -vv --cov-report term-missing --cov connexion_sql_utils
+  - tox -e ${TOXENV}
+
+after_success:
+  - coveralls
 
 
