@@ -95,5 +95,8 @@ install: clean ## install the package to the active Python's site-packages
 run-example:
 	python examples/app.py
 
-example:
-	docker-compose run --rm -p "8080:8080" api make run-example
+examples:
+	docker-compose up -d db && \
+		sleep 2 && \
+		docker-compose run --rm -p "8080:8080" api make run-example && \
+		docker-compose kill db

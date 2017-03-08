@@ -21,4 +21,37 @@ This package also has a set of utility functions that when combined with
 api.
 
 
+*app.py:*
+
+.. literalinclude:: ../examples/app.py
+    
+
+*swagger.yml:*
+
+.. literalinclude:: ../examples/swagger.yml
+    :language: yaml
+
+
+You can run this example locally in a docker container.
+
+.. code-block:: bash
+
+    git-clone https://github.com/m-housh/connexion_sql_utils.git
+    cd ./connexion_sql_utils
+
+**and**
+
+.. code-block:: bash
+
+    docker-compose build
+    docker-compose up -d db  # db needs a few seconds to start-up
+    docker-compose up api
+
+**or**
+.. code-block:: bash
+    make examples
+    
+
+You can then visit ``http://localhost:8080/ui`` to view the swagger docs and
+try it out.
 

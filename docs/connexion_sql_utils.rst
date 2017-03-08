@@ -4,10 +4,10 @@ connexion_sql_utils package
 Submodules
 ----------
 
-connexion_sql_utils.abc module
-------------------------------
+connexion_sql_utils.base_mixin_abc module
+-----------------------------------------
 
-.. automodule:: connexion_sql_utils.abc
+.. automodule:: connexion_sql_utils.base_mixin_abc
     :members:
     :undoc-members:
     :show-inheritance:
