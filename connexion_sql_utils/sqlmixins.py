@@ -11,7 +11,7 @@ import contextlib
 import json
 import logging
 
-from .abc import BaseMixinABC
+from .base_mixin_abc import BaseMixinABC
 from .decorators import event_func
 
 logger = logging.getLogger(__name__)

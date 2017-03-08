@@ -9,7 +9,7 @@ decorators
 """
 from functools import wraps
 
-from .abc import BaseMixinABC
+from .base_mixin_abc import BaseMixinABC
 
 
 def event_func(*event_names):

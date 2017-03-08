@@ -1,4 +1,4 @@
-from .abc import BaseMixinABC
+from .base_mixin_abc import BaseMixinABC
 from .sqlmixins import BaseMixin
 from .decorators import ensure_asset, to_json, event_func
 from .crud import delete, get, get_id, put, post
