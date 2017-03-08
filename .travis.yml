@@ -19,9 +19,13 @@ env:
   - DB_PASSWORD=postgres
 
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
-install: pip install -r requirements_dev.txt
+install: 
+  - pip install -r requirements_dev.txt
+  - pip install -U .
+  - pip install -U coveralls
 
 # command to run tests, e.g. python setup.py test
-script: py.test -v
+script: 
+  - py.test -vv --cov-report term-missing --cov connexion_sql_utils
 
 
