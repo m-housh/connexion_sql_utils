@@ -26,7 +26,8 @@ install:
   - pip install -r requirements_dev.txt
   - pip install -U .
   - pip install -U coveralls
-  - pip install tox-travis
+  - pip install -U tox-travis
+  - pip install -U contextlib2
 
 # command to run tests, e.g. python setup.py test
 script: tox
