@@ -1,0 +1,123 @@
+swagger: '2.0'
+info:
+  title: Example Foo api
+  version: '0.1'
+consumes:
+  - application/json
+produces:
+  - application/json
+
+paths:
+  /foo:
+    get:
+      tags: [Foo]
+      operationId: app.get_foo
+      summary: Get all the foo
+      parameters:
+        - name: limit
+          in: query
+          type: integer
+          minimum: 0
+          default: 100
+        - name: bar
+          in: query
+          type: string
+          pattern: "^[a-zA-Z0-9-_]*$"
+      responses:
+        200:
+          description: Return the foo's
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Foo'
+    post:
+      tags: [Foo]
+      operationId: app.post_foo
+      summary: Create a new foo.
+      parameters:
+        - name: foo
+          in: body
+          schema:
+            $ref: '#/definitions/Foo'
+      responses:
+        201:
+          description: Foo created
+          schema:
+            $ref: '#/definitions/Foo'
+        400:
+          description: Failed to save foo
+  /foo/{foo_id}:
+    get:
+      tags: [Foo]
+      operationId: app.get_foo_id
+      summary: Get a single foo
+      parameters:
+        - $ref: '#/parameters/foo_id'
+      responses:
+        200:
+          description: Return the foo
+          schema:
+            $ref: '#/definitions/Foo'
+        404:
+          description: Foo does not exist
+    put:
+      tags: [Foo]
+      operationId: app.put_foo
+      summary: Update a foo
+      parameters:
+        - $ref: '#/parameters/foo_id'
+        - name: foo_data
+          in: body
+          schema:
+            $ref: '#/definitions/Foo'
+      responses:
+        200:
+          description: Updated foo
+          schema:
+            $ref: '#/definitions/Foo'
+        400:
+          description: Failed due to invalid data
+        404:
+          description: Foo does not exist
+    delete:
+      tags: [Foo]
+      operationId: app.delete_foo
+      summary: Delete a foo
+      parameters:
+        - $ref: '#/parameters/foo_id'
+      responses:
+        204:
+          description: Foo was deleted
+        404:
+          description: Foo does not exist
+
+parameters:
+  foo_id:
+    name: foo_id
+    description: Foo's unique identifier
+    type: string
+    in: path
+    required: true
+    pattern: "^[a-zA-Z0-9-]+$"
+        
+definitions:
+  Foo:
+    type: object
+    required:
+      - bar
+    properties:
+      id:
+        type: string
+        description: Unique identifier
+        example: 44a288c1-829c-410d-9a6e-1fce1beb62d4
+        readOnly: true
+      bar:
+        type: string
+        description: The bar attribute
+        maxLength: 40
+        example: 'some bar'
+      baz:
+        type: number
+        description: The number of baz
+        minimum: 1
+        example: 10
