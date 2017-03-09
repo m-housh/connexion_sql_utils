@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-decorators
-----------
+decorators.py
+~~~~~~~~~~~~~
 
-    This module holds decorators either used by this package or for use
-    when created ``sqlalchemy`` database models.
+This module holds decorators either used by this package or for use
+when creating ``sqlalchemy`` database models.
 
 """
 from functools import wraps

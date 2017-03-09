@@ -34,6 +34,10 @@ class BaseMixin(object):
     A user must define a ``session_maker`` on the mixin, to
     complete it as a classmethod or a staticmethod.
 
+    All query methods, automatically create a session from the ``session_maker``
+    method that should be declared on a sub-class.  Any method that creates,
+    updates, or deletes automatically adds and commits the changes.
+
     """
     id = Column(UUID(), primary_key=True)
 
@@ -44,6 +48,10 @@ class BaseMixin(object):
     @staticmethod
     @event_func('before_insert')
     def create_id(mapper, connection, target):
+        """Automatically creates a ``UUID`` before inserting a new
+        item.
+
+        """
         target.id = str(uuid.uuid4())
 
     @classmethod
@@ -57,7 +65,11 @@ class BaseMixin(object):
 
     @classmethod
     def query_by(cls, **kwargs):
-        """Return a query statement for the class
+        """Return a query statement for the class.
+
+        This would be simalar to::
+
+            >>> session.query(MyDbModel).filter_by(id=1234)
 
         """
         with cls.session_scope() as session:
@@ -67,6 +79,12 @@ class BaseMixin(object):
     def get_id(cls, id):
         """Get by id.
 
+        :param id:  The unique identifier for the class.
+
+        This is would be like::
+
+            >>> session.query(MyDbModel).filter_by(id=1234).first()
+
         """
         try:
             return cls.query_by(id=id).first()
@@ -74,7 +92,10 @@ class BaseMixin(object):
             return None
 
     def update(self, **kwargs):
-        """Update attributes on an instance
+        """Update attributes on an instance.
+
+        :param kwargs:  The attributes to update on the instance.  Any
+                        attribute not declared on the class is ignored.
 
         """
         with self.session_scope() as session:
@@ -85,7 +106,7 @@ class BaseMixin(object):
             session.add(self)
 
     def save(self):
-        """Save an instance.
+        """Save an instance to the database.
 
         """
         with self.session_scope() as session:
@@ -99,10 +120,24 @@ class BaseMixin(object):
             session.delete(self)
 
     def _asDict(self) -> Dict[str, Any]:
+        """Return a ``dict`` representation of the instance.
+
+        """
         return {k: v for (k, v) in vars(self).items() if not
                 k.startswith('_')}
 
     def dump(self) -> str:
+        """Return a json serialized string of the instance.
+
+        Any methods that are wrapped with ``to_json`` decorator
+        will be called on the values before returning the json
+        string.
+
+        .. see-also::
+
+            :class:`decorators.to_json`
+
+        """
         vals = self._asDict()
         jfuncs = (getattr(self, f) for f in dir(self)
                   if hasattr(getattr(self, f), '_to_json'))
@@ -117,6 +152,15 @@ class BaseMixin(object):
     @classmethod
     @contextlib.contextmanager
     def session_scope(cls):
+        """A context manager for a session. Which creates a session
+        from the import :meth:`session_maker`` method that should
+        be declared by sub-class.  And is used in the database methods
+        for a class/instance.
+
+        The session will automatically try to commit any changes, rolling back
+        on any errors, and finally closing the session.
+
+        """
         if not issubclass(cls, BaseMixinABC):
             raise TypeError('Must declare a session maker method.')
 
