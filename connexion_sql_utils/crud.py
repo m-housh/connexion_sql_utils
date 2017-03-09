@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-crud
-----
+crud.py
+~~~~~~~
 
-    This module contains methods that can be used to query the database.
+This module contains methods that can be used to query the database.
 They are designed to be used in conjunction with the :class:`BaseMixin` or
 a class that passes a check for the :class:`BaseMixinABC` methods.
 

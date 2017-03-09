@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 """
-abc
----
+base_mixin_abc.py
+~~~~~~~~~~~~~~~~~
 
-    This module contains an abc class that can be used to check that the
-    correct interface is defined to use the ``crud`` methods.  Nothing
-    actually inherits from this class as it breaks when making an
-    ``sqlalchemy.ext.declarative:declarative_base``, but it is helpful
-    for ``issubclass`` and ``isinstance`` checks.
+This module contains an abc class that can be used to check that the
+correct interface is defined to use the ``crud`` methods.  Nothing
+actually inherits from this class as it breaks when making an
+``sqlalchemy.ext.declarative:declarative_base``, but it is helpful
+for ``issubclass`` and ``isinstance`` checks.
 
 
-    When inheriting from this package's :class:`BaseMixin` then one only
-    needs to implement a ``session_maker`` method.
+When inheriting from this package's :class:`BaseMixin` then one only
+needs to implement a ``session_maker`` method.
 
 
 """
