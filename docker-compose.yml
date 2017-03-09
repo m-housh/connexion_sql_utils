@@ -6,7 +6,8 @@ services:
       POSTGRES_PASSWORD: postgres 
 
   api:
-    image: mhoush/connexion_sql_utils
+    build:
+      context: .
     environment:
       DB_HOST: postgres
       DB_PASSWORD: postgres
