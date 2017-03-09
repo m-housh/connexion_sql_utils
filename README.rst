@@ -1,7 +1,7 @@
 ===============================
 Connexion Sqlalchemy Utils
 ===============================
-![](https://img.shields.io/pypi/v/connexion_sql_utils.svg)
+
 .. image:: https://img.shields.io/pypi/v/connexion_sql_utils.svg
     :target: https://pypi.python.org/pypi/connexion_sql_utils
 
