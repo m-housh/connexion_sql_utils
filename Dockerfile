@@ -2,11 +2,8 @@ FROM mhoush/psycopg2
 
 ADD . /app
 
-RUN pip install --upgrade \
-    /app \
-    -r /app/requirements_dev.txt
+RUN pip install --upgrade /app 
 
 WORKDIR /app
 
-VOLUME /app
-
+CMD ["/usr/bin/make", "run-example"]

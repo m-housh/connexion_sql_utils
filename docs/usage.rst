@@ -48,7 +48,9 @@ You can run this example locally in a docker container.
     docker-compose up api
 
 **or**
+
 .. code-block:: bash
+
     make examples
     
 

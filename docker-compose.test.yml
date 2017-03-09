@@ -1,16 +1,21 @@
 version: '2'
 services:
-  db:
+  test_db:
     image: postgres:alpine
     environment:
       POSTGRES_PASSWORD: postgres 
 
-  api:
-    image: mhoush/connexion_sql_utils
+  test_api:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
     environment:
       DB_HOST: postgres
       DB_PASSWORD: postgres
     links:
-      - db:postgres
-    ports:
-      - 8080:8080
+      - test_db:postgres
+    volumes:
+      - .:/app
+    command: ['/usr/bin/make', 'run-tests']
+
+

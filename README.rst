@@ -25,7 +25,12 @@ Sqlalchemy, Postgres, Connexion utility
 Features
 --------
 
-* Helps create REST api's quickly
+* Helps create REST api's quickly with ``Connexion``, ``Sqlalchemy``,
+  and ``Postgresql``
+
+
+.. include:: ../examples/README.rst
+
 
 Credits
 ---------

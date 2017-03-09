@@ -23,6 +23,8 @@ endef
 export PRINT_HELP_PYSCRIPT
 BROWSER := python -c "$$BROWSER_PYSCRIPT"
 
+DC_TEST = docker-compose.test.yml
+
 help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
 
@@ -55,9 +57,9 @@ run-tests: clean  ## run tests quickly with the default Python
 	py.test -v --cov connexion_sql_utils --cov-report term-missing
 	
 tests:
-	docker-compose up -d db && \
-		docker-compose run --rm api make run-tests && \
-		docker-compose stop
+	docker-compose -f $(DC_TEST) up -d test_db && \
+		docker-compose -f $(DC_TEST) run --rm test_api
+	docker-compose -f $(DC_TEST) stop
 
 test-all: ## run tests on every Python version with tox
 	tox
@@ -95,8 +97,8 @@ install: clean ## install the package to the active Python's site-packages
 run-example:
 	python examples/app.py
 
-examples:
-	docker-compose up -d db && \
-		sleep 2 && \
-		docker-compose run --rm -p "8080:8080" api make run-example && \
-		docker-compose kill db
+examples:  ## run the example api in docker-compose
+	docker-compose up -d db
+	sleep 2 
+	docker-compose run --rm api
+	docker-compose kill db
