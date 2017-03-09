@@ -22,7 +22,7 @@ test_requirements = [
 
 setup(
     name='connexion_sql_utils',
-    version='0.1.0',
+    version='0.1.1',
     description="Sqlalchemy, Postgres, Connexion utility",
     long_description=readme + '\n\n' + history,
     author="Michael Housh",

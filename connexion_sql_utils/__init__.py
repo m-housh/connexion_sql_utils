@@ -5,7 +5,7 @@ from .crud import delete, get, get_id, put, post
 
 __author__ = """Michael Housh"""
 __email__ = 'mhoush@houshhomeenergy.com'
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 
 
 __all__ = [
