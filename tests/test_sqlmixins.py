@@ -127,8 +127,8 @@ def test_session_scope():
 def test_dump():
     foo = Foo(bar='data')
     # baz is added with the dump_method decorator.
-    assert foo.dump() == '{"bar": "data", "baz": "bang"}'
-    assert str(foo) == '{"bar": "data", "baz": "bang"}'
+    assert json.loads(foo.dump()) == {"bar": "data", "baz": "bang"}
+    assert json.loads(str(foo)) == {"bar": "data", "baz": "bang"}
 
 
 def test_delete():
