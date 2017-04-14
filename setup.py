@@ -12,8 +12,8 @@ with open('HISTORY.rst') as history_file:
 requirements = [
     # TODO: put package requirements here
     'connexion==1.1.5',
-    'sqlalchemy==1.1.6',
-    'psycopg2==2.7',
+    'sqlalchemy>=1.1.6',
+    'psycopg2>=2.7',
 ]
 
 test_requirements = [
