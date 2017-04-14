@@ -12,11 +12,20 @@ import json
 def test_save():
     foo = Foo(bar='some data')
     foo.save()
-    assert Foo.query_by(bar='some data') is not None
+    assert Foo.query_by(bar='some data').first() is not None
 
     foo.id = 'bad id'
     with pytest.raises(Exception):
         foo.save()
+
+
+def test_save_with_session():
+    foo = Foo(bar='a bar')
+    with Foo.session_scope() as session:
+        foo.save(session=session)
+        session.commit()
+
+    assert Foo.query_by(bar='a bar').first() is not None
 
 
 def test_update():
@@ -24,6 +33,21 @@ def test_update():
     assert foo.bar == 'data'
     foo.update(bar='different data')
     assert foo.bar == 'different data'
+
+
+def test_update_with_session():
+    foo = Foo.query_by().first()
+    old_bar = foo.bar
+    new_bar = '{}-new'.format(old_bar)
+
+    with Foo.session_scope() as session:
+        foo.update(bar=new_bar, session=session)
+        assert foo.bar == new_bar
+        session.commit()
+
+    # check that changes persist
+    loaded = Foo.query_by(bar=new_bar).first()
+    assert loaded is not None
 
 
 def test_get_id():
@@ -38,6 +62,14 @@ def test_query_by():
     query = Foo.query_by().all()
     for q in query:
         assert isinstance(q, Foo)
+
+
+def test_query_by_with_session():
+    with Foo.session_scope() as session:
+        query = Foo.query_by(session=session).all()
+
+        for q in query:
+            assert isinstance(q, Foo)
 
 
 def test_event_func_fails_with_no_event_name():
@@ -107,6 +139,18 @@ def test_delete():
     with Foo.session_scope() as s:
         q = s.query(Foo).filter(Foo.id == id).first()
         assert q is None
+
+
+def test_delete_with_session():
+    foo = Foo(bar='delete-ses')
+    foo.save()
+
+    with Foo.session_scope() as session:
+        foo.delete(session=session)
+        session.commit()
+
+    # check delete persists
+    assert Foo.query_by(bar='delete-ses').first() is None
 
 
 def test_session_scope_fails_with_invalid_subclass():

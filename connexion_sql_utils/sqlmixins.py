@@ -64,7 +64,7 @@ class BaseMixin(object):
                 event.listen(cls, ename, fn)
 
     @classmethod
-    def query_by(cls, **kwargs):
+    def query_by(cls, session=None, **kwargs):
         """Return a query statement for the class.
 
         This would be simalar to::
@@ -72,11 +72,14 @@ class BaseMixin(object):
             >>> session.query(MyDbModel).filter_by(id=1234)
 
         """
+        if session is not None:
+            return session.query(cls).filter_by(**kwargs)
+
         with cls.session_scope() as session:
             return session.query(cls).filter_by(**kwargs)
 
     @classmethod
-    def get_id(cls, id):
+    def get_id(cls, id, session=None):
         """Get by id.
 
         :param id:  The unique identifier for the class.
@@ -87,37 +90,48 @@ class BaseMixin(object):
 
         """
         try:
-            return cls.query_by(id=id).first()
+            return cls.query_by(id=id, session=session).first()
         except:
             return None
 
-    def update(self, **kwargs):
+    def _update(self, session, kwargs):
+        for key in (k for k in vars(self.__class__)
+                    if not k.startswith('_')):
+            if kwargs.get(key, None) is not None:
+                setattr(self, key, kwargs[key])
+        session.add(self)
+
+    def update(self, session=None, **kwargs):
         """Update attributes on an instance.
 
         :param kwargs:  The attributes to update on the instance.  Any
                         attribute not declared on the class is ignored.
 
         """
-        with self.session_scope() as session:
-            for key in (k for k in vars(self.__class__)
-                        if not k.startswith('_')):
-                if kwargs.get(key, None) is not None:
-                    setattr(self, key, kwargs[key])
-            session.add(self)
+        if session is not None:
+            return self._update(session, kwargs)
 
-    def save(self):
+        with self.session_scope() as session:
+            return self._update(session, kwargs)
+
+    def save(self, session=None):
         """Save an instance to the database.
 
         """
-        with self.session_scope() as session:
-            session.add(self)
+        if session is not None:
+            return session.add(self)
 
-    def delete(self):
+        with self.session_scope() as session:
+            return session.add(self)
+
+    def delete(self, session=None):
         """Delete an instance from the database.
 
         """
+        if session is not None:
+            return session.delete(self)
         with self.session_scope() as session:
-            session.delete(self)
+            return session.delete(self)
 
     def _asDict(self) -> Dict[str, Any]:
         """Return a ``dict`` representation of the instance.
