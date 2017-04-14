@@ -67,6 +67,10 @@ class BaseMixin(object):
     def query_by(cls, session=None, **kwargs):
         """Return a query statement for the class.
 
+        :param session:  An optional sqlalchemy session, if one is not passed
+                         a session will be created for the query.
+        :param kwargs:  kwargs passed into the query to filter results.
+
         This would be simalar to::
 
             >>> session.query(MyDbModel).filter_by(id=1234)
@@ -83,6 +87,8 @@ class BaseMixin(object):
         """Get by id.
 
         :param id:  The unique identifier for the class.
+        :param session:  An optional sqlalchemy session, if one is not passed
+                         a session will be created for the query.
 
         This is would be like::
 
@@ -106,6 +112,8 @@ class BaseMixin(object):
 
         :param kwargs:  The attributes to update on the instance.  Any
                         attribute not declared on the class is ignored.
+        :param session:  An optional sqlalchemy session, if one is not passed
+                         a session will be created for the query.
 
         """
         if session is not None:
@@ -117,6 +125,9 @@ class BaseMixin(object):
     def save(self, session=None):
         """Save an instance to the database.
 
+        :param session:  An optional sqlalchemy session, if one is not passed
+                         a session will be created for the query.
+
         """
         if session is not None:
             return session.add(self)
@@ -126,6 +137,9 @@ class BaseMixin(object):
 
     def delete(self, session=None):
         """Delete an instance from the database.
+
+        :param session:  An optional sqlalchemy session, if one is not passed
+                         a session will be created for the query.
 
         """
         if session is not None:
@@ -153,13 +167,19 @@ class BaseMixin(object):
 
         """
         vals = self._asDict()
-        jfuncs = (getattr(self, f) for f in dir(self)
-                  if hasattr(getattr(self, f), '_to_json'))
+        to_json_funcs = (getattr(self, f) for f in dir(self)
+                         if hasattr(getattr(self, f), '_to_json'))
 
-        for fn in jfuncs:
+        for fn in to_json_funcs:
             for key in fn._keys:
                 if key in vals:
                     vals[key] = fn(vals[key])
+
+        dump_funcs = (getattr(self, f) for f in dir(self)
+                      if hasattr(getattr(self, f), '_dump_method'))
+
+        for fn in dump_funcs:
+            vals = fn(vals)
 
         return json.dumps(vals)
 

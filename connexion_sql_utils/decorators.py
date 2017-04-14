@@ -75,3 +75,21 @@ def ensure_asset(fn):
             raise TypeError(asset)
         return fn(asset, *args, **kwargs)
     return decorator
+
+
+def dump_method(fn):
+    """Allow's the ability to create custom methods that are called
+    during an :class:`BaseMixin` dump method.  The method should recieve
+    on argument which is a dict of all the values so far.  The method should
+    then return a dict of the current state of the values passed in.
+
+    This allows manipulation of existing values, or adding values that
+    are not automatically added during the dump to json.
+
+    """
+    fn._dump_method = True
+
+    @wraps(fn)
+    def decorator(*args, **kwargs):
+        return fn(*args, **kwargs)
+    return decorator

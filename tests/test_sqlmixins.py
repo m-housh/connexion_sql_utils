@@ -126,8 +126,9 @@ def test_session_scope():
 
 def test_dump():
     foo = Foo(bar='data')
-    assert foo.dump() == '{"bar": "data"}'
-    assert str(foo) == '{"bar": "data"}'
+    # baz is added with the dump_method decorator.
+    assert json.loads(foo.dump()) == {"bar": "data", "baz": "bang"}
+    assert json.loads(str(foo)) == {"bar": "data", "baz": "bang"}
 
 
 def test_delete():
@@ -163,3 +164,11 @@ def test_session_scope_fails_with_invalid_subclass():
     with pytest.raises(TypeError):
         with Invalid.session_scope():
             pass
+
+
+def test_dump_method():
+    foo = Foo.query_by().first()
+
+    loaded = json.loads(foo.dump())
+    assert 'baz' in loaded
+    assert loaded['baz'] == 'bang'

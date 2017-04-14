@@ -121,3 +121,7 @@ definitions:
         description: The number of baz
         minimum: 1
         example: 10
+      bang:
+        type: string
+        description: A custom read-only variable added to every Foo
+        readOnly: true
