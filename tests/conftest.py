@@ -4,7 +4,7 @@ from sqlalchemy import create_engine, Column, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-from connexion_sql_utils import BaseMixin, post
+from connexion_sql_utils import BaseMixin, post, dump_method
 
 DB_USER = os.environ.get('DB_USER', 'postgres')
 DB_PASSWORD = os.environ.get('DB_PASSWORD', 'postgres')
@@ -44,6 +44,11 @@ Base = declarative_base(cls=MyBase)
 class Foo(Base):
 
     bar = Column(String(), nullable=True)
+
+    @dump_method
+    def add_baz(self, vals):
+        vals['baz'] = 'bang'
+        return vals
 
 
 @pytest.fixture(scope='module', autouse=True)

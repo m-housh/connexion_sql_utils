@@ -6,3 +6,11 @@ History
 ------------------
 
 * First release on PyPI.
+
+
+0.1.3
+-----
+
+* Added ability to pass a session into BaseMixin database methods.
+* Added ``dump_method`` decorator to allow custom methods to be called while
+  creating the json representation.

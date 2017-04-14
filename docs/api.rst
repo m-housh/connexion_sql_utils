@@ -40,6 +40,9 @@ Decorators
 .. autofunction:: to_json
     :noindex:
 
+.. autofunction:: dump_method
+    :noindex:
+
 .. autofunction:: ensure_asset
     :noindex:
 

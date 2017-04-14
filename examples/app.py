@@ -10,7 +10,7 @@ from sqlalchemy import Column, String, Numeric, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-from connexion_sql_utils import BaseMixin, to_json, event_func
+from connexion_sql_utils import BaseMixin, to_json, event_func, dump_method
 from connexion_sql_utils import crud
 
 # Most of this would typically be in a different module, but since
@@ -69,6 +69,13 @@ class Foo(DbModel):
             logging.debug('Converting baz...')
             return float(val)
         return val
+
+    # add a custom value when dumping to json
+    @dump_method
+    def add_bang(self, vals):
+        logging.debug('adding bang')
+        vals['bang'] = 'boom'
+        return vals
 
     # attach an event listener to ensure ``bar`` is only saved
     # as a lower case string.
