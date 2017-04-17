@@ -14,3 +14,8 @@ History
 * Added ability to pass a session into BaseMixin database methods.
 * Added ``dump_method`` decorator to allow custom methods to be called while
   creating the json representation.
+
+0.1.4
+-----
+
+* Added the ability to dump as dict instead of always being a json string.

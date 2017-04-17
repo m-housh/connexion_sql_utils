@@ -127,8 +127,14 @@ def test_session_scope():
 def test_dump():
     foo = Foo(bar='data')
     # baz is added with the dump_method decorator.
+    dumped = foo.dump()
+    assert isinstance(dumped, str)
     assert json.loads(foo.dump()) == {"bar": "data", "baz": "bang"}
     assert json.loads(str(foo)) == {"bar": "data", "baz": "bang"}
+
+    dumped = foo.dump(_dict=True)
+    assert isinstance(dumped, dict)
+    assert dumped == {"bar": "data", "baz": "bang"}
 
 
 def test_delete():

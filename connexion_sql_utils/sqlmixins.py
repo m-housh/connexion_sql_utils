@@ -39,6 +39,8 @@ class BaseMixin(object):
     updates, or deletes automatically adds and commits the changes.
 
     """
+    dump_dict = False
+
     id = Column(UUID(), primary_key=True)
 
     @declared_attr
@@ -154,18 +156,24 @@ class BaseMixin(object):
         return {k: v for (k, v) in vars(self).items() if not
                 k.startswith('_')}
 
-    def dump(self) -> str:
-        """Return a json serialized string of the instance.
+    def dump(self, _dict=None) -> str:
+        """Return a json serialized string or a dict representation of the
+        instance.
 
         Any methods that are wrapped with ``to_json`` decorator
         will be called on the values before returning the json
         string.
+
+        :param _dict:  If ``True`` return a dict instead of a json string,
+                       or the class attribute ``dump_dict`` is true on a
+                       sub-class.
 
         .. see-also::
 
             :class:`decorators.to_json`
 
         """
+        dump_dict = _dict or self.dump_dict
         vals = self._asDict()
         to_json_funcs = (getattr(self, f) for f in dir(self)
                          if hasattr(getattr(self, f), '_to_json'))
@@ -181,7 +189,7 @@ class BaseMixin(object):
         for fn in dump_funcs:
             vals = fn(vals)
 
-        return json.dumps(vals)
+        return vals if dump_dict is True else json.dumps(vals)
 
     @classmethod
     @contextlib.contextmanager
